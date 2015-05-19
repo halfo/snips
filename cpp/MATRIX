@@ -1,0 +1,70 @@
+snippet MATRIX
+//{{{ ************[        Matrix        ]************
+// 1. Complexity: O ((ORDER ^ 3) * log (e))
+// 2. Every calculation is done in long long
+// 3. Change/Remove 'MOD', if required
+// 4. Test transformation matrix (for t ^ 1, do you get f(n + 1))
+
+// Format: ((t ^ e) * f) % MOD
+// t = transformation matrix
+// e = power 
+// f = function matrix
+
+// Example:
+// | a  b |  *  | f(n)     |  =  | f(n + 1) |
+// | 1  0 |  *  | f(n - 1) |  =  | f(n)     |
+
+template <int ORDER> struct Matrix {
+    LL M [ORDER][ORDER] = {};
+
+    Matrix () { clear (); }
+    Matrix (LL temp [ORDER][ORDER]) { memcpy (M, temp, sizeof M); }
+
+    void clear () { CLR (M); }
+    void toIdentity () { clear (); REP (i, ORDER) M [i][i] = 1; }
+    void allOne () { REP (i, ORDER) REP (j, ORDER) M [i][j] = 1; }
+
+    bool operator == (const Matrix <ORDER> &rhs) const {
+        REP (i, ORDER) REP (j, ORDER)
+            if (M [i][j] != rhs.M [i][j])
+                return false;
+        return true;
+    }
+
+    Matrix <ORDER> operator * (const Matrix <ORDER> &rhs) const {
+        Matrix <ORDER> tmp;
+        REP (i, ORDER) REP (j, ORDER) REP (k, ORDER)
+            tmp.M [i][j] = mod (tmp.M [i][j] + M [i][k] * rhs.M [k][j], MOD);
+        return tmp;
+    }
+
+    Matrix <ORDER> operator % (const LL &rhs) const {
+        Matrix <ORDER> tmp;
+        REP (i, ORDER) REP (j, ORDER)
+            tmp.M [i][j] = mod (M [i][j], rhs);
+        return tmp;
+    }
+
+    Matrix <ORDER> operator ^ (const LL &rhs) const {
+        Matrix <ORDER> tmp, base = *this;
+        tmp.toIdentity ();
+        for (LL e = rhs; e; e >>= 1LL) {
+            if (e & 1LL) tmp = (tmp * base);
+            base = (base * base);
+        }
+        return tmp;
+    }
+
+    friend ostream &operator << (ostream &ostr, Matrix <ORDER> &tmp) {
+        ostr << "[";
+        REP (i, ORDER) {
+            ostr << "\n    " << i << ": ";
+            REP (j, ORDER) ostr << (j ? ", " : "[") << tmp.M [i][j];
+            ostr << "]" << (i < ORDER - 1 ? "," : "\n");
+        }
+        ostr << "]\n";
+        return ostr;
+    }
+};
+//}}}
+endsnippet
