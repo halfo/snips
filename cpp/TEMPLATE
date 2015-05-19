@@ -90,7 +90,7 @@ typedef vector <PII> VII;
 
 const int MAX_N = int (1e5) + 7;
 const int MAX_E = int (1e6) + 7;
-const int MOD   = int (1e9) + 7;
+// const int MOD   = int (1e9) + 7;
 const int INF   = 1 << 30;
 const double PI = 2 * acos (0.0);
 //}}}
