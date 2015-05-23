@@ -3,18 +3,18 @@ snippet FLOW
 int N, s, t, gap [MAX_N], h [MAX_N], head [MAX_N];
 int E, to [MAX_E], from [MAX_E], f [MAX_E], c [MAX_E];
 
-inline void add (int u, int v, int cu, int cv) { 
+inline void addEdge (int u, int v, int cu, int cv) { 
     to [E] = v, from [E] = head [u], f [E] = 0, c [E] = cu, head [u] = E++;
     to [E] = u, from [E] = head [v], f [E] = 0, c [E] = cv, head [v] = E++;
 }
 
-int isap (int u, int e) {
-    if (u == t) return e;
+int __dfs__ (int u, int F) {
+    if (u == t) return F;
 
     for (int i = head [u]; ~i; i = from [i]) {
         int v = to [i];
         if (c [i] - f [i] > 0 && h [v] + 1 == h [u]) {
-            int flow = isap_dfs (v, min (e, c [i] - f [i]));
+            int flow = __dfs__ (v, min (F, c [i] - f [i]));
             f [i]     += flow;
             f [i ^ 1] -= flow;
             if (flow > 0) return flow;
@@ -26,16 +26,15 @@ int isap (int u, int e) {
     return 0;
 }
 
-int flow () {
-    int ret = 0; gap [0] = N;
-    while (h [s] < N) ret += isap (s, INF);
-    return ret;
+void init (int n) {
+    N = n, E = 0, s = n - 2, t = n - 1;
+    CLR (h), CLR (gap), RST (head);
 }
 
-void init () {
-    N = ; // number of nodes
-    E = 0, s = N - 2, t = N - 1;
-    CLR (h), CLR (gap), RST (head);
+int flow () {
+    int ret = 0; gap [0] = N;
+    while (h [s] < N) ret += __dfs__ (s, INF);
+    return ret;
 }
 //}}}
 endsnippet
