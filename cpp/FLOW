@@ -1,39 +1,49 @@
 snippet FLOW
 //{{{ ************[         Flow         ]************
-int N, s, t, gap [MAX_N], h [MAX_N], head [MAX_N];
-int E, to [MAX_E], from [MAX_E], f [MAX_E], c [MAX_E];
+// 1. (a) Complexity: O (E * V ^ 2)
+//    (b) Graph with unit capacity: O (min (E ^ 1.5, E * V ^ .67))
+// 2. Edges MUST be directed (for most cases, actually)
+// 3. Change INF according to FLOW_TYPE
+// 4. nV = number of nodes in flow network 
 
-inline void addEdge (int u, int v, int cu, int cv) { 
-    to [E] = v, from [E] = head [u], f [E] = 0, c [E] = cu, head [u] = E++;
-    to [E] = u, from [E] = head [v], f [E] = 0, c [E] = cv, head [v] = E++;
+typedef int FLOW_TYPE;
+FLOW_TYPE f [MAX_E], c [MAX_E];
+
+int nV, s, t, gap [MAX_N], h [MAX_N], last [MAX_N];
+int nE, to [MAX_E], from [MAX_E];
+
+inline void addEdge (int u, int v, FLOW_TYPE cu, FLOW_TYPE cv = 0) { 
+    to [nE] = v, from [nE] = last [u], f [nE] = 0, c [nE] = cu, last [u] = nE++;
+    to [nE] = u, from [nE] = last [v], f [nE] = 0, c [nE] = cv, last [v] = nE++;
 }
 
-int __dfs__ (int u, int F) {
+FLOW_TYPE isap (int u, FLOW_TYPE F) {
     if (u == t) return F;
 
-    for (int i = head [u]; ~i; i = from [i]) {
-        int v = to [i];
-        if (c [i] - f [i] > 0 && h [v] + 1 == h [u]) {
-            int flow = __dfs__ (v, min (F, c [i] - f [i]));
-            f [i]     += flow;
-            f [i ^ 1] -= flow;
+    for (int e = last [u]; ~e; e = from [e]) {
+        int v = to [e];
+        if (c [e] - f [e] > 0 && h [v] + 1 == h [u]) {
+            FLOW_TYPE flow = isap (v, min (F, c [e] - f [e]));
+            f [e]     += flow;
+            f [e ^ 1] -= flow;
             if (flow > 0) return flow;
         }
     }
 
-    if (--gap [h [u]] == 0) h [s] = N;
+    if (--gap [h [u]] == 0) h [s] = nV;
     ++gap [++h [u]];
+
     return 0;
 }
 
-void init (int n) {
-    N = n, E = 0, s = n - 2, t = n - 1;
-    CLR (h), CLR (gap), RST (head);
+void init (int _nV) {
+    nV = _nV, nE = 0, s = n - 2, t = n - 1;
+    CLR (h), CLR (gap), RST (last);
 }
 
-int flow () {
-    int ret = 0; gap [0] = N;
-    while (h [s] < N) ret += __dfs__ (s, INF);
+FLOW_TYPE flow () {
+    FLOW_TYPE ret = 0; gap [0] = nV;
+    while (h [s] < nV) ret += isap (s, INF);
     return ret;
 }
 //}}}
