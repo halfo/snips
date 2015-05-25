@@ -1,0 +1,83 @@
+snippet
+//{{{ ************[         MCMF         ]************
+typedef int FLOW_TYPE;
+FLOW_TYPE maxFlow, f [MAX_E], c [MAX_E];
+
+int nV, s, t, nE, to [MAX_E], from [MAX_E], last [MAX_N];
+LL minCost, w [MAX_E];
+
+inline void addEdge (int u, int v, FLOW_TYPE cap, LL weight) { 
+    to [nE] = v, from [nE] = last [u], f [nE] = 0, c [nE] = cap, last [u] = nE, w [nE++] =  weight;
+    to [nE] = u, from [nE] = last [v], f [nE] = 0, c [nE] = 0,   last [v] = nE, w [nE++] = -weight;
+}
+
+int p [MAX_N], inq [MAX_N]; LL d [MAX_N];
+deque <int> q;
+bool spfa () {
+    fill (d, d + nV, LINF);
+
+    q.push_front (s);
+    p [s] = -1;
+    inq [s] = 1;
+    d [s] = 0;
+
+    while (!q.empty ()) {
+        int u = q.front (); q.pop_front ();
+        inq [u] = 0;
+
+        for (int e = last [u]; ~e; e = from [e]) {
+            int v = to [e];
+            if (c [e] > f [e] && d [u] + w [e] < d [v]) {
+                d [v] = d [u] + w [e];
+                p [v] = e;
+
+                if (!inq [v]) {
+                    inq [v] = 1;
+
+                    if (!q.empty () && d [v] < d [q.front ()]) q.push_back (v);
+                    else q.push_front (v);
+                }
+            }
+        }
+    }
+
+    return d [t] < LINF;
+}
+
+void mcmf () {
+    minCost = k;
+    maxFlow = 0;
+
+    while (spfa ()) {
+        FLOW_TYPE F = c [p [t]] - f [p [t]];
+        for (int u = t; u != s; u = to [p [u] ^ 1]) {
+            int e = p [u];
+            F = min (F, c [e] - f [e]);
+        }
+
+        bool flag = false;
+        if (F * d [t] <= minCost) minCost -= F * d [t], maxFlow += F;
+        else {
+            flag = true;
+            maxFlow +=  minCost / d [t];
+            F        =  minCost / d [t];
+            minCost -= (minCost / d [t]) * minCost;
+        }
+
+        for (int u = t; u != s; u = to [p [u] ^ 1]) {
+            int e = p [u];
+            f [e] += F, f [e ^ 1] -= F;
+        }
+
+        if (flag) return;
+    }
+}
+
+void buildGraph () {
+    nE = 0; RST (last);
+    nV = ; // number of nodes in flow network
+    s = ;  // source, generally nV - 2
+    t = ;  // sink,   generally nV - 1
+}
+//}}}
+endsnippet
