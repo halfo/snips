@@ -1,0 +1,48 @@
+snippet RRMQ
+//{{{ ************[         RRMQ         ]************
+// 1. Single value query, range update 
+// 2. IDENTITY: merge (IDENTITY, anything) = anything
+//              merge (IDENTITY, IDENTITY) = IDENTITY 
+// 3. push (): pushes everything to leaf in O (leaf)
+
+typedef int RRMQ_TYPE;
+const RRMQ_TYPE IDENTITY = ;
+
+struct RRMQ {
+    int leaf;
+    RRMQ_TYPE ST [MAX_N << 1];
+
+    RRMQ_TYPE merge (RRMQ_TYPE &x, RRMQ_TYPE &y) {
+        return 0; // return merged value
+    }
+
+    void build (int n, RRMQ_TYPE a []) {
+        leaf = n;
+
+        REP (i, leaf) ST [leaf + i] = a [i]; // change here
+        FOR (i, leaf - 1) ST [i] = IDENTITY; // is it ok?
+    }
+
+    RRMQ_TYPE get (int i) {
+        RRMQ_TYPE x = IDENTITY;
+        for (i += leaf; i; i >>= 1) x = merge (x, ST [i]);
+        return x;
+    }
+
+    void upd (int L, int R, RRMQ_TYPE x) { // [L, R]
+        for (L += leaf, R += leaf; L <= R; L >>= 1, R >>= 1) {
+            if ( L & 1) { ST [L] = merge (x, ST [L]); L++; }
+            if (~R & 1) { ST [R] = merge (x, ST [R]); R++; }
+        }
+    }
+
+    void push () {
+        FOR (i, leaf - 1) {
+            ST [i << 1]     = merge (ST [i << 1],     ST [i]);
+            ST [i << 1 | 1] = merge (ST [i << 1 | 1], ST [i]);
+            ST [i] = IDENTITY; // again, is it ok?
+        }
+    }
+};
+//}}}
+endsnippet

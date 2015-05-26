@@ -45,8 +45,8 @@ bool spfa () {
 }
 
 void mcmf () {
-    minCost = k;
-    maxFlow = 0;
+    minCost = ;
+    maxFlow = ;
 
     while (spfa ()) {
         FLOW_TYPE F = c [p [t]] - f [p [t]];

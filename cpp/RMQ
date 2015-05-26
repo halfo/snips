@@ -1,42 +1,41 @@
 snippet RMQ
 //{{{ ************[         RMQ          ]************
-// 1. RMQ_TYPE: Container Type
+// 1. Range query, single value update
 // 2. IDENTITY: merge (IDENTITY, anything) = anything
 //              merge (IDENTITY, IDENTITY) = IDENTITY 
-// 3. Change in 'build (...)'
-// 4. Change in 'merge (...)'
 
 typedef int RMQ_TYPE;
-const RMQ_TYPE IDENTITY = 0;
+const RMQ_TYPE IDENTITY = ;
 
-int leaf;
-RMQ_TYPE ST [MAX_N << 2];
+struct RMQ {
+    int leaf;
+    RMQ_TYPE ST [MAX_N << 1];
 
-RMQ_TYPE merge (RMQ_TYPE &x, RMQ_TYPE &y) {
-    return 0; // return merged value
-}
-
-void build (int n, RMQ_TYPE a []) {
-    leaf = 1 << (32 - __builtin_clz (n - 1));
-
-    REP (i, n) ST [leaf + i] = a [i]; // change here
-    FORAB (i, n, leaf - 1) ST [leaf + i] = IDENTITY;
-    ROF (i, leaf - 1) ST [i] = merge (ST [i << 1], ST [i << 1 | 1]);
-}
-
-void upd (int i, RMQ_TYPE x) {
-    ST [i += leaf] = x;
-    for (i >>= 1; i; i >>= 1)
-        ST [i] = merge (ST [i << 1], ST [i << 1 | 1]);
-}
-
-RMQ_TYPE get (int L, int R) {
-    RMQ_TYPE ret = IDENTITY;
-    for (L += leaf, R += leaf; L <= R; L >>= 1, R >>= 1) {
-        if ( L & 1) ret = merge (ret, ST [L++]);
-        if (~R & 1) ret = merge (ret, ST [R--]);
+    RMQ_TYPE merge (RMQ_TYPE &x, RMQ_TYPE &y) {
+        return 0; // return merged value
     }
-    return ret;
-}
+
+    void build (int n, RMQ_TYPE a []) {
+        leaf = n;
+
+        REP (i, leaf) ST [leaf + i] = a [i]; // change here
+        ROF (i, leaf - 1) ST [i] = merge (ST [i << 1], ST [i << 1 | 1]);
+    }
+
+    void upd (int i, RMQ_TYPE x) {
+        ST [i += leaf] = x;
+        for (i >>= 1; i; i >>= 1)
+            ST [i] = merge (ST [i << 1], ST [i << 1 | 1]);
+    }
+
+    RMQ_TYPE get (int L, int R) { // [L, R]
+        RMQ_TYPE ret = IDENTITY;
+        for (L += leaf, R += leaf; L <= R; L >>= 1, R >>= 1) {
+            if ( L & 1) ret = merge (ret, ST [L++]);
+            if (~R & 1) ret = merge (ret, ST [R--]);
+        }
+        return ret;
+    }
+};
 //}}}
 endsnippet
