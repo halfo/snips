@@ -32,7 +32,7 @@ struct RRMQ {
     void upd (int L, int R, RRMQ_TYPE x) { // [L, R]
         for (L += leaf, R += leaf; L <= R; L >>= 1, R >>= 1) {
             if ( L & 1) { ST [L] = merge (x, ST [L]); L++; }
-            if (~R & 1) { ST [R] = merge (x, ST [R]); R++; }
+            if (~R & 1) { ST [R] = merge (ST [R], x); R++; }
         }
     }
 

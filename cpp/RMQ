@@ -23,18 +23,19 @@ struct RMQ {
     }
 
     void upd (int i, RMQ_TYPE x) {
-        ST [i += leaf] = x;
-        for (i >>= 1; i; i >>= 1)
-            ST [i] = merge (ST [i << 1], ST [i << 1 | 1]);
+        for (ST [i += leaf] = x; i > 1; i >>= 1)
+            ST [i >> 1] = merge (ST [i], ST [i ^ 1]);
     }
 
+    // for cases when order matters, ex: CF-380C
     RMQ_TYPE get (int L, int R) { // [L, R]
-        RMQ_TYPE ret = IDENTITY;
+        RMQ_TYPE retL = IDENTITY;
+        RMQ_TYPE retR = IDENTITY;
         for (L += leaf, R += leaf; L <= R; L >>= 1, R >>= 1) {
-            if ( L & 1) ret = merge (ret, ST [L++]);
-            if (~R & 1) ret = merge (ret, ST [R--]);
+            if ( L & 1) retL = merge (retL, ST [L++]);
+            if (~R & 1) retR = merge (ST [R--], retR);
         }
-        return ret;
+        return merge (retL, retR);
     }
 };
 //}}}
