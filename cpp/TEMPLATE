@@ -7,10 +7,10 @@ using namespace std;
 //{{{ ************[  Loops               ]************
 #define FORAB(i, a, b)  for (__typeof (b) i = (a), i##_b = (b); i <= i##_b; ++i)
 #define REP(i, n)       FORAB (i, 0, (n) - 1)
-#define FOR(i, n)       FORAB (i, 1, (n))
+#define FOR(i, n)       FORAB (i, 1, (n) - 1 + 1)
 #define ROFBA(i, a, b)  for (__typeof (b) i = (b), i##_a = (a); i >= i##_a; --i)
 #define PER(i, n)       ROFBA (i, 0, (n) - 1)
-#define ROF(i, n)       ROFBA (i, 1, (n))
+#define ROF(i, n)       ROFBA (i, 1, (n) - 1 + 1)
 #define FOREACH(i, s)   for (__typeof ((s).end ()) i = (s).begin (); i != (s).end (); ++i)
 //}}}
 //{{{ ************[  Floating points     ]************
