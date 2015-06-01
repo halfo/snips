@@ -23,7 +23,7 @@ struct RRMQ {
         FOR (i, leaf - 1) ST [i] = IDENTITY; // is it ok?
     }
 
-    RRMQ_TYPE get (int i) {
+    RRMQ_TYPE ask (int i) {
         RRMQ_TYPE x = IDENTITY;
         for (i += leaf; i; i >>= 1) x = merge (x, ST [i]);
         return x;

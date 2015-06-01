@@ -1,0 +1,84 @@
+snippet STREE
+//{{{ ************[     Segment Tree     ]************
+struct node {
+    int l, r;
+
+    node () {}
+    node (int l, int r) : l (l), r (r) {}
+
+    friend ostream &operator << (ostream &ostr, node& temp) {
+        ostr << "[l:" << temp.l << ", r:" << temp.r;
+        // ostr << ", v:" << temp.v;
+        ostr << "]";
+
+        return ostr;
+    }
+} TR [MAX_N << 2];
+
+const node IDENTITY = ;
+
+#define Lc(i) (i << 1)
+#define Rc(i) (i << 1 | 1)
+
+#define Lr(i) (TR [i].l)
+#define Rr(i) (TR [i].r)
+
+void adjust (int i) {
+    // adjust current node according to new lazy
+    // old lazy += new lazy
+}
+
+void split (int i) {
+    // return if no lazy
+
+    // adjust (Lc (i));
+    // adjust (Rc (i));
+    // lazy -> 0
+}
+
+node merge (node lhs, node rhs) {
+    node temp = node (lhs.l, rhs.r);
+
+    // todo
+    return temp;
+}
+
+void build (int i, int L, int R) {
+    TR [i] = node (L, R);
+    if (L == R) {
+        // scan or init maybe?
+        return;
+    }
+
+    int M = (L + R) >> 1;
+    build (Lc (i), L    , M);
+    build (Rc (i), M + 1, R);
+
+    // do I really need this?
+    TR [i] = merge (TR [Lc (i)], TR [Rc (i)]);
+}
+
+node ask (int i, int L, int R) {
+    if (L >  Rr (i) || Lr (i) >  R) return IDENTITY;
+    if (L <= Lr (i) && Rr (i) <= R) return TR [i];
+
+    split (i);
+    return merge (ask (Lc (i), L, R),
+                  ask (Rc (i), L, R));
+}
+
+void upd (int i, int L, int R) {
+    if (L >  Rr (i) || Lr (i) >  R) return;
+    if (L <= Lr (i) && Rr (i) <= R) {
+        adjust (i); return;
+    }
+
+    split (i);
+    upd (Lc (i), L, R);
+    upd (Rc (i), L, R);
+
+    // any change?
+    TR [i] = merge (TR [Lc (i)], TR [Rc (i)]);
+}
+//}}}
+endsnippet

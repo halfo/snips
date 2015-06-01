@@ -28,7 +28,7 @@ struct RMQ {
     }
 
     // for cases when order matters, ex: CF-380C
-    RMQ_TYPE get (int L, int R) { // [L, R]
+    RMQ_TYPE ask (int L, int R) { // [L, R]
         RMQ_TYPE retL = IDENTITY;
         RMQ_TYPE retR = IDENTITY;
         for (L += leaf, R += leaf; L <= R; L >>= 1, R >>= 1) {
