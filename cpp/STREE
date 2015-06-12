@@ -6,7 +6,7 @@ struct node {
     node () {}
     node (int l, int r) : l (l), r (r) {}
 
-    friend ostream &operator << (ostream &ostr, node& temp) {
+    friend ostream &operator << (ostream &ostr, node &temp) {
         ostr << "[l:" << temp.l << ", r:" << temp.r;
         // ostr << ", v:" << temp.v;
         ostr << "]";
@@ -23,16 +23,16 @@ const node IDENTITY = ;
 #define Lr(i) (TR [i].l)
 #define Rr(i) (TR [i].r)
 
-void adjust (int i) {
-    // adjust current node according to new lazy
+void relax (int i) {
+    // relax current node according to new lazy
     // old lazy += new lazy
 }
 
 void split (int i) {
     // return if no lazy
 
-    // adjust (Lc (i));
-    // adjust (Rc (i));
+    // relax (Lc (i));
+    // relax (Rc (i));
     // lazy -> 0
 }
 
@@ -70,7 +70,7 @@ node ask (int i, int L, int R) {
 void upd (int i, int L, int R) {
     if (L >  Rr (i) || Lr (i) >  R) return;
     if (L <= Lr (i) && Rr (i) <= R) {
-        adjust (i); return;
+        relax (i); return;
     }
 
     split (i);
