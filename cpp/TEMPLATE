@@ -80,11 +80,11 @@ vector <string> tokenizer(string s) {
 template <class A, class B> inline A max(A a, B b) { return a > b ? a : b; }
 template <class A, class B> inline A min(A a, B b) { return a < b ? a : b; }
 template <class A, class B> inline void swap(A &a, B &b) { A temp = a; a = b; b = temp; }
-template <class T> T gcd(T a, T b) { while (a && b) a > b ? a %= b : b %= a; return a + b; }
 template <class A, class B> inline B mod(A a, B m) { return (a %= m) >= 0 ? a : (a + m); }
-template <class A> inline A modInv(long long x, A m) { return x < 2 ? x : mod((1 - 1LL * m * modInv(m % x, x)) / x, m); } // x ^ -1 = y (mod m)
-template <class A> string toString(A x) { stringstream ss; ss << x; return ss.str(); }
-template <class A> void toNumber(string s, A& x) { stringstream ss(s); ss >> x; }
+template <class T> inline T modInv(long long x, T m) { return x < 2 ? x : mod((1 - 1LL * m * modInv(m % x, x)) / x, m); } // x ^ -1 = y (mod m)
+template <class T> inline T gcd(T a, T b) { while (a && b) a > b ? a %= b : b %= a; return a + b; }
+template <class T> string toString(T x) { stringstream ss; ss << x; return ss.str(); }
+template <class T> void toNumber(string s, T& x) { stringstream ss(s); ss >> x; }
 
 // int dx[] = {0, -1, 0, 1}, dy[] = {-1, 0, 1, 0}; // 4 directions, clockwise
 // int dx[] = {0, -1, -1, -1, 0, 1, 1, 1}, dy[] = {-1, -1, 0, 1, 1, 1, 0, -1}; // 8 directions, clockwise
