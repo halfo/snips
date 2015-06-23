@@ -23,7 +23,7 @@ using namespace std;
 #define EQUAL(x, y)     (ZERO((x) - (y)))
 //}}}
 //{{{ ************[  Macros              ]************
-#define MS(x, y)        memset((x), y, sizeof((x)))
+#define MS(x, y)        memset((x), (y), sizeof((x)))
 #define CLR(x)          MS((x), 0)
 #define RST(x)          MS((x), -1)
 #define ALL(x)          (x).begin(), (x).end()
@@ -35,17 +35,17 @@ using namespace std;
 #define S               second
 //}}}
 //{{{ ************[  Debugger            ]************
-template <class A, class B> ostream &operator << (ostream &o, const pair <A, B> &p) { // for std::pair
+template <class A, class B> ostream& operator<<(ostream& o, const pair <A, B> &p) { // for std::pair
     return o << "(" << p.first << ", " << p.second << ")";
 }
 
-template <class T> void __print__ (string param, T &x) { cout << param << " :: " << x << endl; }
-template <class T> void __print__ (string param, T x[], int n) {
+template <class T> void __print__(string param, T& x) { cout << param << " :: " << x << endl; }
+template <class T> void __print__(string param, T x[], int n) {
     cout << string(param, 0, param.find(',')) << " :: ";
     REP (i, n) cout << (i ? ", " : "[") << x[i]; cout << "]\n";
 }
 
-template <class T> void __stl_print__ (T &x) { // for all STL containers
+template <class T> void __stl_print__(T& x) { // for all STL containers
     cout << "["; FOREACH (i, x) cout << (i != x.begin() ? ", " : "") << *i; cout << "]" << endl;
 }
 
@@ -54,16 +54,16 @@ template <class T> void __stl_print__ (T &x) { // for all STL containers
 #define SLOG(x) { cout << #x << " :: "; __stl_print__(x); }
 //}}}
 //{{{ ************[  Utilities           ]************
-template <class A, class B, class C> inline C power (A p, B e, C m) {
+template <class A, class B, class C> inline C power(A p, B e, C m) { // (p ^ e) % m
     long long ret = 1;
     for (; e; e >>= B(1)) {
-        if (e & 1) ret = (ret * p) % m;
+        if (e & B(1)) ret = (ret * p) % m;
         p = (p * p) % m;
     }
     return (C) (ret >= 0 ? ret : (ret + m));
 }
 
-template <class T> inline bool read (T &x) {
+template <class T> inline bool read(T& x) {
     int c, sgn = 1;
     for (c = getchar(); ~c && (c < '0' || c > '9'); c = getchar()) if (c == '-') sgn = -1;
     for (x = 0; ~c && ('0' <= c && c <= '9'); c = getchar()) x = x * 10 + c - '0';
@@ -71,19 +71,20 @@ template <class T> inline bool read (T &x) {
     return ~c;
 }
 
-vector <string> tokenizer (string s) {
+vector <string> tokenizer(string s) {
     vector <string> vs; stringstream ss(s);
     for (string token; ss >> token;) vs.PB(token);
     return vs;
 }
 
-template <class A, class B> inline A max (A a, B b) { return a > b ? a : b; }
-template <class A, class B> inline A min (A a, B b) { return a < b ? a : b; }
-template <class A, class B> inline void swap (A &a, B &b) { A temp = a; a = b; b = temp; }
-template <class A, class B> inline B mod (A a, B m) { return (a %= m) >= 0 ? a : (a + m); }
-template <class A> inline A modInv (long long x, A m) { return x < 2 ? x : mod((1 - 1LL * m * modInv(m % x, x)) / x, m); } // x ^ -1 = y (mod m)
-template <class A> string toString (A x) { stringstream ss; ss << x; return ss.str(); }
-template <class A> void toNumber (string s, A &x) { stringstream ss(s); ss >> x; }
+template <class A, class B> inline A max(A a, B b) { return a > b ? a : b; }
+template <class A, class B> inline A min(A a, B b) { return a < b ? a : b; }
+template <class A, class B> inline void swap(A &a, B &b) { A temp = a; a = b; b = temp; }
+template <class T> T gcd(T a, T b) { while (a && b) a > b ? a %= b : b %= a; return a + b; }
+template <class A, class B> inline B mod(A a, B m) { return (a %= m) >= 0 ? a : (a + m); }
+template <class A> inline A modInv(long long x, A m) { return x < 2 ? x : mod((1 - 1LL * m * modInv(m % x, x)) / x, m); } // x ^ -1 = y (mod m)
+template <class A> string toString(A x) { stringstream ss; ss << x; return ss.str(); }
+template <class A> void toNumber(string s, A& x) { stringstream ss(s); ss >> x; }
 
 // int dx[] = {0, -1, 0, 1}, dy[] = {-1, 0, 1, 0}; // 4 directions, clockwise
 // int dx[] = {0, -1, -1, -1, 0, 1, 1, 1}, dy[] = {-1, -1, 0, 1, 1, 1, 0, -1}; // 8 directions, clockwise
@@ -103,13 +104,13 @@ typedef vector <PII> VII;
 const int MAX_N = int(1e5) + 7;
 const int MAX_E = int(1e6) + 7;
 // const int MOD   = int(1e9) + 7;
-const int INF   = 1 << 30;
+const int INF   = (1 << 30) - 1;
 const LL  LINF  = 1LL << 62;
 const double PI = 2 * acos(0.0);
 //}}}
 //}}}
 
-int main () {
+int main() {
 #ifdef Local
     freopen("input.txt", "r", stdin);
     // freopen("output.txt", "w", stdout);
